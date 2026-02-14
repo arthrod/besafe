@@ -1,5 +1,3 @@
-use std::process::exit;
-
 use besafe::besafe;
 use clap::Command;
 use install::install_hook;
@@ -17,18 +15,14 @@ fn main() {
         .about("A simple Git pre-commit hook for preventing commiting of .env files!")
         .subcommand(install);
 
-    match cli.try_get_matches() {
-        Ok(matches) => match matches.subcommand_name() {
-            Some("install") => install_hook(),
-            None => {
-                println!("[besafe] Checking...");
-                besafe();
-            }
-            Some(_) => {}
-        },
-        Err(_) => {
-            println!("[besafe] Invalid command!");
-            exit(1);
+    let matches = cli.get_matches();
+
+    match matches.subcommand_name() {
+        Some("install") => install_hook(),
+        None => {
+            println!("[besafe] Checking...");
+            besafe();
         }
+        Some(_) => {}
     }
 }
